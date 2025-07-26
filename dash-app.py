@@ -1,18 +1,23 @@
+import pandas as pd 
 from dash import Dash, html, dcc 
 
-# intantiating app 
+# load in data:
+# data URL 
+url = "https://raw.githubusercontent.com/matplotlib/sample_data/refs/heads/master/aapl.csv" 
+
+# load aapl data into data frame 
+aapl_df = pd.read_csv(url)
+
+# instantiating app 
 app = Dash()
+
 
 # add layout 
 app.layout = [
     # added a <div>Hello World</div>
     # children is the children element of a div tag which is the text field. 
 html.Div([
-    html.H1('Hello Dash'), 
-    html.Div([
-        html.P('Dash converts Python classes into HTML'),
-        html.P("This conversion happens behind the scenes by Dash's JavaScript front-end")
-    ]),
+    html.H1('AAPL Stock 1984-2008'), 
     dcc.Graph()
 ], style={'textAlign': 'center'})
 
