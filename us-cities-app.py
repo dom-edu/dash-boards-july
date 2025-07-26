@@ -17,9 +17,10 @@ y = top_10_cities['pop'] # get city populations
 bar_ = px.bar(x=x, y=y)
 
 # drop down 
+# make cities 
 dd_1 = dcc.Dropdown(
-    ['New York City', 'Montreal', 'San Francisco'],
-    ['Montreal', 'San Francisco'],
+    x,
+    x[:2], # by default select first two 
     multi=True
 )
 
