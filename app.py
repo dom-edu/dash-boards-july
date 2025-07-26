@@ -13,5 +13,13 @@ def hello_world():
     """
     return "<p>Hello, World!</p>"
 
-# run app on port 5000
-app.run(port=5000)
+
+@app.route('/about')
+def about():
+    """
+    return about page to user
+    """
+    return "<p>About Me</p>"
+
+# run app on port 5000, debug=True reruns the app on code changes
+app.run(port=5000, debug=True)
