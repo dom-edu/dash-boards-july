@@ -44,7 +44,5 @@ def greeting():
     greet_ = GREETINGS[rand_idx]
     return f"<h2> {greet_}</h2>"
 
-
-
 # run app on port 5000, debug=True reruns the app on code changes
 app.run(port=5000, debug=True)
