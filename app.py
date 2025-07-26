@@ -1,18 +1,25 @@
 # importing the Flask object from the flask module
 # (that we installed with pip3 install flask)
-from flask import Flask
+from flask import Flask, render_template
 
 # instantiating the flask app 
 app = Flask(__name__)
 
 # register home route (/) to app
-@app.route("/")
+@app.route("/hello")
 def hello_world():
     """ 
     return hello world to user 
     """
     return "<p>Hello, World!</p>"
 
+@app.route('/')
+def index():
+    """
+    load index.html
+    """
+    # looks in templates directory by default 
+    return render_template('index.html')
 
 @app.route('/about')
 def about():
