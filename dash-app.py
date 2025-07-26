@@ -1,5 +1,7 @@
 import pandas as pd 
+import plotly.express as px
 from dash import Dash, html, dcc 
+
 
 # load in data:
 # data URL 
@@ -12,13 +14,19 @@ aapl_df = pd.read_csv(url)
 app = Dash()
 
 
+# plotly line graph 
+fig = px.line(aapl_df, 
+            x="Date", 
+            y="Close")
+
+
 # add layout 
 app.layout = [
     # added a <div>Hello World</div>
     # children is the children element of a div tag which is the text field. 
 html.Div([
     html.H1('AAPL Stock 1984-2008'), 
-    dcc.Graph()
+    dcc.Graph(figure=fig)
 ], style={'textAlign': 'center'})
 
 ]
