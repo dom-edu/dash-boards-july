@@ -32,7 +32,10 @@ def about():
 
 
 # Exercise:
-# add a route /greeting that randomly selects a greeting from the following list  
+# add a route /greeting that randomly selects a greeting from the following list   
+@app.route('/greeting')
+def greeting():
+    return "Hello!"
 
 
 
