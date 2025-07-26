@@ -14,10 +14,15 @@ aapl_df = pd.read_csv(url)
 app = Dash()
 
 
-# plotly line graph 
-fig = px.line(aapl_df, 
+# plotly line graphs 
+
+open_fig = px.line(aapl_df, 
             x="Date", 
-            y="Close")
+            y="Open")
+
+volume_fig = px.line(aapl_df, 
+            x="Date", 
+            y="Volume")
 
 
 # add layout 
@@ -26,7 +31,8 @@ app.layout = [
     # children is the children element of a div tag which is the text field. 
 html.Div([
     html.H1('AAPL Stock 1984-2008'), 
-    dcc.Graph(figure=fig)
+    dcc.Graph(figure=open_fig),
+    dcc.Graph(figure=volume_fig),
 ], style={'textAlign': 'center'})
 
 ]
