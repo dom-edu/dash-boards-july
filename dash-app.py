@@ -1,4 +1,4 @@
-from dash import Dash, html
+from dash import Dash, html, dcc 
 
 # intantiating app 
 app = Dash()
@@ -12,7 +12,8 @@ html.Div([
     html.Div([
         html.P('Dash converts Python classes into HTML'),
         html.P("This conversion happens behind the scenes by Dash's JavaScript front-end")
-    ])
+    ]),
+    dcc.Graph()
 ])
 
 ]
