@@ -7,7 +7,14 @@ app = Dash()
 app.layout = [
     # added a <div>Hello World</div>
     # children is the children element of a div tag which is the text field. 
-    html.Div(children='Hello World')
+html.Div([
+    html.H1('Hello Dash'), 
+    html.Div([
+        html.P('Dash converts Python classes into HTML'),
+        html.P("This conversion happens behind the scenes by Dash's JavaScript front-end")
+    ])
+])
+
 ]
 
 if __name__ == '__main__':
