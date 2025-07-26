@@ -14,7 +14,7 @@ html.Div([
         html.P("This conversion happens behind the scenes by Dash's JavaScript front-end")
     ]),
     dcc.Graph()
-])
+], style={'textAlign': 'center'})
 
 ]
 
