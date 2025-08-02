@@ -81,8 +81,8 @@ geo_scatter_.add_trace(go.Scattergeo(
 
 # layout parameters
 geo_scatter_.update_layout(
-        title_text = '2014 US city populations<br>(Click legend to toggle traces)',
-        showlegend = True,
+        # title_text = '2014 US city populations<br>(Click legend to toggle traces)',
+        showlegend = False,
         geo = dict(
             scope = 'usa',
             landcolor = 'rgb(217, 217, 217)',
@@ -173,13 +173,13 @@ def update_geo(value):
         line_width=0.5,
         sizemode = 'area'
     ),
-    name = '{0}'.format(sel_cities['name'])))
+    name = ','.join(sel_cities['name'])))
 
 
     # layout parameters
     geo_scatter_.update_layout(
-            title_text = '2014 US city populations<br>(Click legend to toggle traces)',
-            showlegend = True,
+            # title_text = '2014 US city populations<br>(Click legend to toggle traces)',
+            # showlegend = True,
             geo = dict(
                 scope = 'usa',
                 landcolor = 'rgb(217, 217, 217)',
