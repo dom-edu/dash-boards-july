@@ -8,8 +8,13 @@ URL = "https://raw.githubusercontent.com/plotly/datasets/refs/heads/master/2014_
 cities_df = pd.read_csv(URL)
 
 
+# strip name col of whitespace
+cities_df['name'] = cities_df['name'].str.strip()
+
+
 # too much data, let's slim it down to top_10
 top_10_cities = cities_df.sort_values('pop', ascending=False).head(10)
+
 
 
 # add a plotly bar chart 
@@ -35,34 +40,46 @@ bar_.update_layout(
 )
 
 # format tooltip text 
+
+scale = 500
 cities_df['text'] = cities_df['name'] + '<br>Population ' + (cities_df['pop']/1e6).astype(str)+' million'
 
-limits = [(0,3),(3,11),(11,21),(21,50),(50,3000)]
-colors = ["royalblue","crimson","lightseagreen","orange","lightgrey"]
-cities = []
-scale = 5000
 
-
-# empty frame 
+# empty frame
 geo_scatter_ = go.Figure()
 
-for i in range(len(limits)):
-    lim = limits[i]
-    df_sub = cities_df[lim[0]:lim[1]]
-    geo_scatter_.add_trace(go.Scattergeo(
-        locationmode = 'USA-states',
-        lon = df_sub['lon'],
-        lat = df_sub['lat'],
-        text = df_sub['text'],
-        marker = dict(
-            size = df_sub['pop']/scale,
-            color = colors[i],
-            line_color='rgb(40,40,40)',
-            line_width=0.5,
-            sizemode = 'area'
-        ),
-        name = '{0} - {1}'.format(lim[0],lim[1])))
+cities = ["New York", "California"]
 
+# search_crit_ = cities_df['name'].str.contains("New York")
+
+search_crit_ = cities_df['name'].isin(cities)
+# contains(string might have additional characters in name)
+# exact match was returning nothing
+
+
+
+sel_cities = cities_df[search_crit_]
+# first_name = cities_df[cities_df['name'] == 'Chicago'
+
+# add one bubble of one city
+geo_scatter_.add_trace(go.Scattergeo(
+    locationmode = 'USA-states',
+    lon =sel_cities['lon'],
+    lat =sel_cities['lat'],
+    text =sel_cities['text'],
+
+    # adding a custom marker
+    marker = dict(
+        size =sel_cities['pop']/scale,
+        color = "royalblue",
+        line_color='rgb(40,40,40)',
+        line_width=0.5,
+        sizemode = 'area'
+    ),
+    name = '{0}'.format(sel_cities['name'])))
+
+
+# layout parameters
 geo_scatter_.update_layout(
         title_text = '2014 US city populations<br>(Click legend to toggle traces)',
         showlegend = True,
@@ -70,7 +87,7 @@ geo_scatter_.update_layout(
             scope = 'usa',
             landcolor = 'rgb(217, 217, 217)',
         )
-    )
+)
 
 
 
@@ -93,7 +110,6 @@ app.layout = [
 )
 def update_graph(value):
     """
-    
     
 
     Args:
@@ -124,7 +140,52 @@ def update_graph(value):
     return bar_
 
 
+@callback(
+    Output('cities-geo-scatter', 'figure'),
+    Input('cities-dd', 'value')
+)
+def update_geo(value):
+    
+    
+#     # filter the dataframe by selected value 
+    filter_ = cities_df['name'].isin(value) # filter by selected values
 
+
+#     cities_sel_df = cities_df[filter_]
+#     x_ = cities_sel_df['name']
+#     y_ = cities_sel_df['pop']
+    
+    sel_cities = cities_df[filter_]
+# first_name = cities_df[cities_df['name'] == 'Chicago'
+
+# add one bubble of one city
+    geo_scatter_.add_trace(go.Scattergeo(
+    locationmode = 'USA-states',
+    lon =sel_cities['lon'],
+    lat =sel_cities['lat'],
+    text =sel_cities['text'],
+
+    # adding a custom marker
+    marker = dict(
+        size =sel_cities['pop']/scale,
+        color = "royalblue",
+        line_color='rgb(40,40,40)',
+        line_width=0.5,
+        sizemode = 'area'
+    ),
+    name = '{0}'.format(sel_cities['name'])))
+
+
+    # layout parameters
+    geo_scatter_.update_layout(
+            title_text = '2014 US city populations<br>(Click legend to toggle traces)',
+            showlegend = True,
+            geo = dict(
+                scope = 'usa',
+                landcolor = 'rgb(217, 217, 217)',
+            )
+    )
+    return geo_scatter_
 
 
 
