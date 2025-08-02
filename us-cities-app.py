@@ -18,9 +18,7 @@ top_10_cities = cities_df.sort_values('pop', ascending=False).head(10)
 
 
 # add a plotly bar chart 
-x = top_10_cities['name'] # get city names 
-y = top_10_cities['pop'] # get city populations
-bar_ = px.bar(x=x, y=y)
+bar_ = create_bar_chart(top_10_cities)
 
 # drop down component 
 # make cities 
@@ -32,12 +30,6 @@ dd_1 = dcc.Dropdown(
     multi=True
 )
 
-# change axis labels, usually 
-# how we edit styles in dash 
-bar_.update_layout(
-    xaxis_title = "City",
-    yaxis_title = "Pop"
-)
 
 # format tooltip text 
 
@@ -89,9 +81,6 @@ geo_scatter_.update_layout(
         )
 )
 
-
-
-
 # instantiate the dash app 
 app = Dash(__name__)
 
@@ -109,35 +98,13 @@ app.layout = [
     Input('cities-dd', 'value')
 )
 def update_graph(value):
-    """
-    
-
-    Args:
-        value : selected cities 
-
-    Returns:
-        new bar chart with selected cities 
-    """
-    print("DEBUG:", value)
-
+   
     # filter the dataframe by selected value 
     filter_ = cities_df['name'].isin(value) # filter by selected values
-
-
-    cities_sel_df = cities_df[filter_]
-    x_ = cities_sel_df['name']
-    y_ = cities_sel_df['pop']
-
-    # remake the bar_chart 
-    bar_ = px.bar(x= x_, y=y_)
-
-    # bar chart styles
-    bar_.update_layout(
-        xaxis_title = "City",
-        yaxis_title = "Pop"
-    )
+    cities_sel_df = cities_df[filter_] 
     
-    return bar_
+    # creates a new bar chart after filtering
+    return create_bar_chart(cities_sel_df)
 
 
 @callback(
@@ -189,4 +156,20 @@ def update_geo(value):
 
 
 
+
+def create_bar_chart(df_):
+    
+    x = df_['name'] # get city names 
+    y = df_['pop'] # get city populations
+    bar_ = px.bar(x=x, y=y)
+    
+    # change axis labels, usually 
+    # how we edit styles in dash 
+    bar_.update_layout(
+        xaxis_title = "City",
+        yaxis_title = "Pop"
+    )
+    
+    return bar_
+    
 app.run(debug=True, port=5000)
