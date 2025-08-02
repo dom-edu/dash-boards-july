@@ -104,6 +104,7 @@ app.layout = [
 # we want to register a call back 
 @callback(
     Output('cities-bar-chart', 'figure'),
+    Output('cities-geo-scatter', 'figure'),
     Input('cities-dd', 'value')
 )
 def update_graph(value):
@@ -113,24 +114,24 @@ def update_graph(value):
     cities_sel_df = cities_df[filter_] 
     
     # recreates a new bar chart after filtering
-    return create_bar_chart(cities_sel_df)
+    return create_bar_chart(cities_sel_df), create_geo_scatter(cities_sel_df)
 
 
-@callback(
-    Output('cities-geo-scatter', 'figure'),
-    Input('cities-dd', 'value')
-)
-def update_geo(value):
+# @callback(
+#     Output('cities-geo-scatter', 'figure'),
+#     Input('cities-dd', 'value')
+# )
+# def update_geo(value):
     
     
-#     # filter the dataframe by selected value 
-    filter_ = cities_df['name'].isin(value)
+# #     # filter the dataframe by selected value 
+#     filter_ = cities_df['name'].isin(value)
     
-     # filter by selected values
-    cities_sel_df = cities_df[filter_]
+#      # filter by selected values
+#     cities_sel_df = cities_df[filter_]
 
-    # recreate geo scatter plot 
-    geo_ = create_geo_scatter(cities_sel_df)
-    return geo_
+#     # recreate geo scatter plot 
+#     geo_ = create_geo_scatter(cities_sel_df)
+#     return geo_
     
 app.run(debug=True, port=5000)
