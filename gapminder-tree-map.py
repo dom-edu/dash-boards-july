@@ -94,7 +94,10 @@ app.layout = [
     dd_2,
     html.H2(children="Populations Growth for Country", 
             style={'textAlign': 'center'}, 
-            id="lp-title"),
+            id="lp-title-pop"),
+    html.H2(children="Years:", 
+            style={'textAlign': 'center'}, 
+            id="lp-title-years"),       
     dcc.Graph(figure=line_plot, id='lp-fig'),
     s_1
 ]
@@ -136,30 +139,47 @@ def update_tm_title(value):
 
 @callback(
     Output('lp-fig','figure'),
-    Input('countries-dd', 'value')
+    Input('countries-dd', 'value'),
+    Input('year-slider', 'value')
 )
-def update_lp(value):
+def update_lp(val1, val2):
     """
     filters data by selected country
     updates scatter plot 
     """
     # for matching selected country
-    filter_ = gapminder_df['country'].isin(value)
+    filter_ = gapminder_df['country'].isin(val1)
+
+    # for matching range slider values
+    filter_2 = gapminder_df['year'] <= val2
 
     # filter data
-    filtered_data = gapminder_df[filter_]
+    filtered_data = gapminder_df[filter_ & filter_2]
 
     return create_lineplot(filtered_data)
 
 
 @callback(
-    Output('lp-title','children'),
+    Output('lp-title-pop','children'),
     Input('countries-dd','value')
+
 )
-def update_lp_title(value):
+def update_lp_title_pop(value):
 
     countries_txt = ', '.join(value)
-    h2_text = f"Population Growth for {countries_txt} 1952-2008"
+    h2_text = f"Population Growth for {countries_txt}"
     return h2_text
+
+@callback(
+    Output('lp-title-years','children'),
+    Input('year-slider','value')
+    
+)
+def update_lp_title_years(value):
+
+    
+    h2_text = f"Years: 1952 - {value}"
+    return h2_text
+
 
 app.run(debug=True,port=5001)
