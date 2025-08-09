@@ -101,7 +101,7 @@ def update_graph(value):
     Output('tm-title','children'),
     Input('year-dd','value')
 )
-def update_title(value):
+def update_tm_title(value):
     """
     Updates the title of the tree map h2 element
     """
@@ -126,5 +126,15 @@ def update_scatter(value):
     filtered_data = gapminder_df[filter_]
 
     return create_scatterplot(filtered_data)
+
+
+@callback(
+    Output('sp-title','children'),
+    Input('countries-dd','value')
+)
+def update_sp_title(value):
+
+    h2_text = f"Population Growth for {value} 1952-2008"
+    return h2_text
 
 app.run(debug=True,port=5001)
