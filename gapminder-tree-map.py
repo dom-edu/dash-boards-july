@@ -17,10 +17,12 @@ app = Dash(__name__)
 # dash components 
 
 # drop down menu 
+years_ = gapminder_df['year']
+
 dd_1 = dcc.Dropdown(
-    ['NYC', 'MTL', 'SF'], 
-    'NYC', 
-    id='demo-dropdown'
+    years_, 
+    years_[0], 
+    id='year-dd'
 )
 
 # define layout to make dash happy 
