@@ -36,6 +36,16 @@ dd_2 = dcc.Dropdown(
 
 )
 
+marks_ = {year : str(year) for year in range(years_.min(), years_.max(), 5)}
+
+s_1 = dcc.Slider(years_.min(), 
+                 years_.max(), 
+                 5,
+                 value=years_.median(),
+                 marks = marks_, # fix for 2k showing up on each bullet point 
+               id='year-slider'
+    )
+
 def create_tree_map(df_):
     """
     creates a plotly tree map from a dataframe 
@@ -85,7 +95,8 @@ app.layout = [
     html.H2(children="Populations Growth for Country", 
             style={'textAlign': 'center'}, 
             id="lp-title"),
-    dcc.Graph(figure=line_plot, id='lp-fig')
+    dcc.Graph(figure=line_plot, id='lp-fig'),
+    s_1
 ]
 
 @callback(
