@@ -43,6 +43,34 @@ app.layout = [
     dcc.Graph(figure=treemap_, id="treemap-fig")
 ]
 
+@callback(
+    Output('treemap-fig','figure'),
+    Input('year-dd','value')
+)
+def update_graph(value):
+
+    # filter our dataframe by year that is passed 
+
+    # year is equal to the value selected in the dropdown 
+    filter_ = gapminder_df['year'] == value
+    filtered_df = gapminder_df[filter_]
+
+    # make a new treemap 
+    new_tree_map = px.treemap(filtered_df, 
+        path=[px.Constant("world"), 
+            'continent', 
+            'country'], 
+        values='pop',
+        color='lifeExp',
+    #   hover_data=['iso_alpha'],
+    color_continuous_scale='RdBu',
+    color_continuous_midpoint=np.average(filtered_df['lifeExp'], weights=filtered_df['pop']))
+
+    # return the new tree map to be updated in the graph object 
+    return new_tree_map
+
+
+
 
 # let's run the app 
 app.run(debug=True,port=5001)
