@@ -3,6 +3,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from dash import Dash, html, dcc ,  Input, Output,callback
 
+# Constants
 GEO_SCALE = 500
 
 # loading in the data 
@@ -12,12 +13,16 @@ cities_df = pd.read_csv(URL)
 # strip name col of whitespace
 cities_df['name'] = cities_df['name'].str.strip()
 
+# create a text field for tooltip
 cities_df['text'] = cities_df['name'] + '<br>Population ' + (cities_df['pop']/1e6).astype(str)+' million'
 
+# modularized functions for adhereing to DRY principle 
 def create_bar_chart(df_):
     
     x = df_['name'] # get city names 
     y = df_['pop'] # get city populations
+
+    # create plotly barchart 
     bar_ = px.bar(x=x, y=y)
     
     # change axis labels, usually 
@@ -85,9 +90,17 @@ cities_ = top_10_cities['name']
 dd_1 = dcc.Dropdown(
     cities_,
     cities_[:2], # by default select first two 
-    id="cities-dd",
     placeholder="Select a city",
-    multi=True
+    multi=True,
+    id="cities-dd"
+) 
+
+cb_1 = dcc.Checklist(
+    cities_[:3],
+    cities_[:2],
+    style={'textAlign':'center'},
+    inline= True,
+    id="cities-cb"
 )
 
 # instantiate the dash app 
@@ -97,6 +110,8 @@ app = Dash(__name__)
 app.layout = [
     html.Div(children="US City Populations", style={'textAlign':'center'}),
     dd_1,
+    html.Br(),
+    cb_1,
     dcc.Graph(figure=bar_, id="cities-bar-chart"),
     dcc.Graph(figure=geo_, id="cities-geo-scatter")
 ]
@@ -105,13 +120,18 @@ app.layout = [
 @callback(
     Output('cities-bar-chart', 'figure'),
     Output('cities-geo-scatter', 'figure'),
-    Input('cities-dd', 'value')
+    Input('cities-dd', 'value'),
+    Input('cities-cb', 'value')
+
+   
 )
-def update_graph(value):
+def update_graph(dropdown_value, checkbox_value):
    
     # filter the dataframe by selected value 
-    filter_ = cities_df['name'].isin(value) # filter by selected values
-    cities_sel_df = cities_df[filter_] 
+    filter_ = cities_df['name'].isin(dropdown_value) # filter by selected dropdown values 
+    filter_2 =  cities_df['name'].isin(checkbox_value) # filter by selected checkbox values 
+    cities_sel_df = cities_df[filter_ | filter_2] # if any city is selected by dropdown or checkbox 
+    # | stands for 'or'
     
     # recreates a new bar chart after filtering
     return create_bar_chart(cities_sel_df), create_geo_scatter(cities_sel_df)
