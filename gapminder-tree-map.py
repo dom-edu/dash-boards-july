@@ -47,7 +47,9 @@ treemap_ = create_tree_map(gapminder_df)
 # define layout to make dash happy 
 app.layout = [
     dd_1,
-    html.H2(children="Tree map of Country Populations", style={'textAlign': 'center'}),
+    html.H2(children="Tree map of Country Populations", 
+            style={'textAlign': 'center'}, 
+            id="tm-title"),
     dcc.Graph(figure=treemap_, id="treemap-fig")
 ]
 
@@ -56,6 +58,9 @@ app.layout = [
     Input('year-dd','value')
 )
 def update_graph(value):
+    """
+    Updates the treemap figure to work with a single value
+    """
 
     # filter our dataframe by year that is passed 
 
@@ -69,4 +74,17 @@ def update_graph(value):
     # return the new tree map to be updated in the graph object 
     return new_tree_map
 # let's run the app 
+
+@callback(
+    Output('tm-title','children'),
+    Input('year-dd','value')
+)
+def update_title(value):
+    """
+    Updates the title of the tree map h2 element
+    """
+
+    h2_text = f"Tree map of Country Populations for {value}"
+    return h2_text
+
 app.run(debug=True,port=5001)
