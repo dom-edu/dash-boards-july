@@ -37,7 +37,8 @@ def create_tree_map(df_):
                         color='lifeExp',
                         #   hover_data=['iso_alpha'],
                         color_continuous_scale='RdBu',
-                    color_continuous_midpoint=np.average(df_['lifeExp'], weights=gapminder_df['pop']))
+                    # color_continuous_midpoint=np.average(df_['lifeExp'], weights=gapminder_df['pop']))
+                    )
     return treemap_
 
 # create tree map
