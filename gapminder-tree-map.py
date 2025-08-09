@@ -19,6 +19,7 @@ app = Dash(__name__)
 
 # drop down menu 
 years_ = gapminder_df['year']
+countries_ = gapminder_df['country'].unique()
 
 dd_1 = dcc.Dropdown(
     years_, 
@@ -26,9 +27,16 @@ dd_1 = dcc.Dropdown(
     id='year-dd'
 ) 
 
-def create_tree_map(df_):
+dd_2 = dcc.Dropdown(
+    countries_,
+    countries_[0],
+    id='countries-dd' 
+)
 
-    # tree map 
+def create_tree_map(df_):
+    """
+    creates a plotly tree map from a dataframe 
+    """
     treemap_ = px.treemap(df_, 
                         path=[px.Constant("world"), 
                                 'continent', 
@@ -41,8 +49,17 @@ def create_tree_map(df_):
                     )
     return treemap_
 
-# create tree map
+def create_scatterplot(df_):
+    """
+    creates a plotly scatter plot from a dataframe 
+    """
+    return px.scatter(x=df_['year'], y=df_['pop'])
+
+# instantiate figures
 treemap_ = create_tree_map(gapminder_df)
+scatter_ = create_scatterplot(gapminder_df)
+
+# create a scatter plot 
 
 # define layout to make dash happy 
 app.layout = [
@@ -50,7 +67,12 @@ app.layout = [
     html.H2(children="Tree map of Country Populations", 
             style={'textAlign': 'center'}, 
             id="tm-title"),
-    dcc.Graph(figure=treemap_, id="treemap-fig")
+    dcc.Graph(figure=treemap_, id="treemap-fig"),
+    dd_2,
+    html.H2(children="Populations Growth for Country", 
+            style={'textAlign': 'center'}, 
+            id="sp-title"),
+    dcc.Graph(figure=scatter_)
 ]
 
 @callback(
