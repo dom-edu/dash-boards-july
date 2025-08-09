@@ -31,6 +31,7 @@ dd_2 = dcc.Dropdown(
     countries_,
     countries_[0],
     id='countries-dd' 
+
 )
 
 def create_tree_map(df_):
@@ -55,11 +56,21 @@ def create_scatterplot(df_):
     """
     return px.scatter(x=df_['year'], y=df_['pop'])
 
+# create a scatter plot 
+
+def create_lineplot(df_):
+    """
+     creates a plotly line plot from a dataframe 
+    """
+    return px.line(df_, x="year", y="pop", color='country')
+
+
 # instantiate figures
 treemap_ = create_tree_map(gapminder_df)
-scatter_ = create_scatterplot(gapminder_df)
+# scatter_ = create_scatterplot(gapminder_df)
+line_plot = create_lineplot(gapminder_df)
 
-# create a scatter plot 
+
 
 # define layout to make dash happy 
 app.layout = [
@@ -71,8 +82,8 @@ app.layout = [
     dd_2,
     html.H2(children="Populations Growth for Country", 
             style={'textAlign': 'center'}, 
-            id="sp-title"),
-    dcc.Graph(figure=scatter_, id='sp-fig')
+            id="lp-title"),
+    dcc.Graph(figure=line_plot, id='lp-fig')
 ]
 
 @callback(
@@ -111,10 +122,10 @@ def update_tm_title(value):
 
 
 @callback(
-    Output('sp-fig','figure'),
+    Output('lp-fig','figure'),
     Input('countries-dd', 'value')
 )
-def update_scatter(value):
+def update_lp(value):
     """
     filters data by selected country
     updates scatter plot 
@@ -125,14 +136,14 @@ def update_scatter(value):
     # filter data
     filtered_data = gapminder_df[filter_]
 
-    return create_scatterplot(filtered_data)
+    return create_lineplot(filtered_data)
 
 
 @callback(
-    Output('sp-title','children'),
+    Output('lp-title','children'),
     Input('countries-dd','value')
 )
-def update_sp_title(value):
+def update_lp_title(value):
 
     h2_text = f"Population Growth for {value} 1952-2008"
     return h2_text
