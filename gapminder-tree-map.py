@@ -72,7 +72,7 @@ app.layout = [
     html.H2(children="Populations Growth for Country", 
             style={'textAlign': 'center'}, 
             id="sp-title"),
-    dcc.Graph(figure=scatter_)
+    dcc.Graph(figure=scatter_, id='sp-fig')
 ]
 
 @callback(
@@ -108,5 +108,23 @@ def update_title(value):
 
     h2_text = f"Tree map of Country Populations for {value}"
     return h2_text
+
+
+@callback(
+    Output('sp-fig','figure'),
+    Input('countries-dd', 'value')
+)
+def update_scatter(value):
+    """
+    filters data by selected country
+    updates scatter plot 
+    """
+    # for matching selected country
+    filter_ = gapminder_df['country'] == value
+
+    # filter data
+    filtered_data = gapminder_df[filter_]
+
+    return create_scatterplot(filtered_data)
 
 app.run(debug=True,port=5001)
