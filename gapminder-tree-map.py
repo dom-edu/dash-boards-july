@@ -14,8 +14,17 @@ gapminder_df = pd.read_csv(URL)
 # let's instantiate the dash app 
 app = Dash(__name__) 
 
+# dash components 
+
+# drop down menu 
+dd_1 = dcc.Dropdown(
+    ['NYC', 'MTL', 'SF'], 
+    'NYC', 
+    id='demo-dropdown'
+)
+
 # define layout to make dash happy 
-app.layout = []
+app.layout = [dd_1]
 
 
 # let's run the app 
