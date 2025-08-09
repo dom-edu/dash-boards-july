@@ -47,6 +47,7 @@ treemap_ = create_tree_map(gapminder_df)
 # define layout to make dash happy 
 app.layout = [
     dd_1,
+    html.H2(children="Tree map of Country Populations", style={'textAlign': 'center'}),
     dcc.Graph(figure=treemap_, id="treemap-fig")
 ]
 
