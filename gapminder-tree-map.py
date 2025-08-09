@@ -29,8 +29,10 @@ dd_1 = dcc.Dropdown(
 
 dd_2 = dcc.Dropdown(
     countries_,
-    countries_[0],
-    id='countries-dd' 
+    [countries_[0]],
+    id='countries-dd', 
+    placeholder="Select a country",
+    multi=True
 
 )
 
@@ -131,7 +133,7 @@ def update_lp(value):
     updates scatter plot 
     """
     # for matching selected country
-    filter_ = gapminder_df['country'] == value
+    filter_ = gapminder_df['country'].isin(value)
 
     # filter data
     filtered_data = gapminder_df[filter_]
@@ -145,7 +147,8 @@ def update_lp(value):
 )
 def update_lp_title(value):
 
-    h2_text = f"Population Growth for {value} 1952-2008"
+    countries_txt = ', '.join(value)
+    h2_text = f"Population Growth for {countries_txt} 1952-2008"
     return h2_text
 
 app.run(debug=True,port=5001)
